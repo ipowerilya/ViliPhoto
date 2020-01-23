@@ -172,7 +172,7 @@ public class MainRuntimeBehaviour : MonoBehaviour
             //Play Video
             txt.text = "loaded";
             
-            ExtractZipFile(playbackDir, dirEnd);
+            ExtractVidZip(playbackDir, dirEnd);
             //EXIT
             yield break;
         }
@@ -195,7 +195,7 @@ public class MainRuntimeBehaviour : MonoBehaviour
             });
         }
 
-        //Save then Play if there was no download error
+        //Save
         if (downloadSuccess)
         {
             //Save Video
@@ -204,7 +204,7 @@ public class MainRuntimeBehaviour : MonoBehaviour
             //Play Video
             txt.text = "loaded";
            
-            ExtractZipFile(playbackDir, dirEnd);
+            ExtractVidZip(playbackDir, dirEnd);
 
         }
     }
@@ -246,7 +246,50 @@ public class MainRuntimeBehaviour : MonoBehaviour
         }
         return false;
     }
-    public void ExtractZipFile(string archiveFilenameIn, string outFolder)
+    /*
+        public void UnZipp(string srcDirPath, string destDirPath)
+        {
+            ZipInputStream zipIn = null;
+            FileStream streamWriter = null;
+            txt.text = "start unzipping";
+
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(destDirPath));
+
+                zipIn = new ZipInputStream(File.OpenRead(srcDirPath));
+                txt.text = "zip: " + srcDirPath;
+                ZipEntry entry;
+                txt.text = "dir created if you see this";
+                while ((entry = zipIn.GetNextEntry()) != null)
+                {
+                    string dirPath = Path.GetDirectoryName(destDirPath + entry.Name);
+
+                    if (!Directory.Exists(dirPath))
+                    {
+                        Directory.CreateDirectory(dirPath);
+                        dirName = Path.GetDirectoryName(destDirPath + entry.Name);
+                        PlayerPrefs.SetString("url", dirName);
+                        PlayerPrefs.Save();
+                    }
+
+                    if (!entry.IsDirectory)
+                    {
+                        streamWriter = File.Create(destDirPath + entry.Name);
+                        int size = 2048;
+                        byte[] buffer = new byte[size];
+
+                        while ((size = zipIn.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            streamWriter.Write(buffer, 0, size);
+                        }
+                    }
+
+                    streamWriter.Close();
+                }
+            }
+            */
+    public void ExtractVidZip(string archiveFilenameIn, string outFolder)
     {
         ZipFile zf = null;
         try
@@ -256,17 +299,17 @@ public class MainRuntimeBehaviour : MonoBehaviour
 
             foreach (ZipEntry zipEntry in zf)
             {
-                if (!zipEntry.IsFile) continue; // Ignore directories
+                if (!zipEntry.IsFile) continue; 
 
                 String entryFileName = zipEntry.Name;
 
-                // to remove the folder from the entry:
+               
                 entryFileName = Path.GetFileName(entryFileName);
 
-                byte[] buffer = new byte[4096];     // 4K is optimum
+                byte[] buffer = new byte[4096];    
                 Stream zipStream = zf.GetInputStream(zipEntry);
 
-                // Manipulate the output filename here as desired.
+                
                 String fullZipToPath = Path.Combine(outFolder, entryFileName);
                 string directoryName = Path.GetDirectoryName(fullZipToPath);
                 if (directoryName.Length > 0)
@@ -289,8 +332,6 @@ public class MainRuntimeBehaviour : MonoBehaviour
             cube.gameObject.SetActive(false);
             isDecoding1 = false;
             checkloading = false;
-           
-            //ZipUtil.Unzip(playbackDir, dirEnd);
            
         }
     }
