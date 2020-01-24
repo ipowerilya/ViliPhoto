@@ -158,6 +158,7 @@ public class MainRuntimeBehaviour : MonoBehaviour
         dirEnd = Path.Combine(Application.persistentDataPath, "YourUnzippedVideos");
         //For Iphone
         playbackDir = "file://" + saveDir;
+        dirEnd = "file://" + dirEnd;
 
 
         bool downloadSuccess = false;
